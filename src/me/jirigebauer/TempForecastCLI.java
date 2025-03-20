@@ -41,9 +41,15 @@ public class TempForecastCLI {
         scanner.close();
     }
 
-    private static String processRequest(String input){
+    /**
+     * Processes a user request to determine the temperature forecast for a specified location and time.
+     *
+     * @param input The user's request string, e.g., "Determine the temperature in London in 2 hours"
+     * @return A string containing the forecasted temperature (e.g., "It will be 15°C in London in 2 hours.")
+     */
+    static String processRequest(String input){
         String[] parts = input.split("\\s+");
-        if(parts.length < 8 || !input.startsWith("Determine the temperature in") || !input.contains(" in "))
+        if(parts.length < 5 || !input.startsWith("Determine the temperature in") || !input.contains(" in "))
             return INVALID_FORMAT_MESSAGE;
 
         int inIndex = input.indexOf(" in ");
@@ -62,7 +68,13 @@ public class TempForecastCLI {
         return "It will be " + temperature + "°C in " + location + " in " + hours + " " + hourLabel + ".";
     }
 
-    private static int parseTime(String timePhrase){
+    /**
+     * Parses a time phrase to extract the number of hours for the temperature forecast.
+     *
+     * @param timePhrase The time portion of the user input, e.g., "in 2 hours"
+     * @return The number of hours as an integer (e.g., 2), or -1 if the time phrase is invalid
+     */
+    static int parseTime(String timePhrase){
         String[] timeParts = timePhrase.split("\\s+");
         if(timeParts.length >= 3 && timeParts[0].equals("in") && timeParts[2].startsWith("hour")) {
             try{
@@ -74,7 +86,14 @@ public class TempForecastCLI {
         return -1;
     }
 
-    private static int generateTemperature(String location, int hours){
+    /**
+     * Generates a simulated forecast for a given location and a time horizon.
+     *
+     * @param location  The name of the location for which to generate the temperature (e.g., "London")
+     * @param hours     The number of hours into the future fot the forecast (e.g., 2)
+     * @return The forecasted temperature in degrees Celsius, between -10 and 35 inclusive
+     */
+    static int generateTemperature(String location, int hours){
         RANDOM.setSeed(location.hashCode());
         int current = RANDOM.nextInt(MAX_TEMPERATURE - MIN_TEMPERATURE + 1) + MIN_TEMPERATURE;
         for(int i = 0; i < hours; i++) {
